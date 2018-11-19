@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Мария Махова](https://up.htmlacademy.ru/javascript/16/user/580177).
-* Наставник: `Неизвестно`.
+* Наставник: [Екатерина Кащенко].
 
 ---
 
