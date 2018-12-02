@@ -4,50 +4,72 @@ var body = document.querySelector('body');
 var bodyWidth = window.getComputedStyle(body).maxWidth;
 var map = document.querySelector('.map');
 var accomodationType = ['palace', 'flat', 'house', 'bungalo'];
-var accomodationCards = [];
+var cards = [];
 var mapPin = document.querySelector('.map__pin');
 var mapPinWidth = window.getComputedStyle(mapPin).width;
 var mapPinHeight = window.getComputedStyle(mapPin).height;
-var locationX = parseInt(bodyWidth, 10) - parseInt(mapPinWidth, 10);
+var LOCATION_MIN_X = 0.5 * parseInt(mapPinWidth, 10);
+var LOCATION_MAX_X = parseInt(bodyWidth, 10) - LOCATION_MIN_X;
+var LOCATION_MIN_Y = 130;
+var LOCATION_MAX_Y = 630;
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var pinsList = document.querySelector('.map__pins');
+var advertsNumber = 8;
 
-var createAccomodationCard = function (array) {
+var getLinkAvatar = function (index) {
+  var avatar = 'img/avatars/user' + 0 + (index + 1) + '.png';
 
-  var accomodationCard = {
+  return avatar;
+};
+
+var getRandomNumber = function (min, max) {
+  var randomNumber = Math.floor(Math.random() * (max - min) + min);
+
+  return randomNumber;
+};
+
+var createCard = function (array, index) {
+
+  var card = {
     author: {
-      avatar: 'img/avatars/user' + 0 + (i + 1) + '.png',
+      avatar: getLinkAvatar(index),
     },
 
     offer: {
-      type: array[i],
+      type: array[index],
     },
 
     location: {
-      x: Math.floor(Math.random() * locationX + 0.5 * parseInt(mapPinWidth, 10)),
-      y: Math.floor(Math.random() * (630 - 130) + 130),
+      x: getRandomNumber(LOCATION_MIN_X, LOCATION_MAX_X),
+      y: getRandomNumber(LOCATION_MIN_Y, LOCATION_MAX_Y),
     },
   };
 
-  return accomodationCard;
+  return card;
 };
 
-var addPinElement = function (accomodation) {
+var addPinElement = function (advert) {
   var pin = pinTemplate.cloneNode(true);
-  pin.style.left = accomodation.location.x - 0.5 * parseInt(mapPinWidth, 10) + 'px';
-  pin.style.top = accomodation.location.y - parseInt(mapPinHeight, 10) + 'px';
-  pin.querySelector('img').src = accomodation.author.avatar;
+  pin.style.left = advert.location.x - LOCATION_MIN_X + 'px';
+  pin.style.top = advert.location.y - parseInt(mapPinHeight, 10) + 'px';
+  pin.querySelector('img').src = advert.author.avatar;
   pin.querySelector('img').alt = 'Заголовок объявления';
 
   return pin;
 };
 
-map.classList.remove('map--faded');
+var addAdvertPin = function (advertsCounter) {
+  for (var i = 0; i < advertsCounter; i++) {
+    createCard(accomodationType, i);
+    cards.push(createCard(accomodationType, i));
+    addPinElement(cards[i]);
+    var advertPin = pinsList.appendChild(addPinElement(cards[i]));
+  }
 
-for (var i = 0; i < 8; i++) {
-  createAccomodationCard(accomodationType);
-  accomodationCards.push(createAccomodationCard(accomodationType));
-  addPinElement(accomodationCards[i]);
-  pinsList.appendChild(addPinElement(accomodationCards[i]));
-}
+  return advertPin;
+};
+
+map.classList.remove('map--faded');
+addAdvertPin(advertsNumber);
+
 
