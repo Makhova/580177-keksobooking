@@ -4,14 +4,12 @@ var body = document.querySelector('body');
 var bodyWidth = window.getComputedStyle(body).maxWidth;
 var map = document.querySelector('.map');
 var accomodationType = ['palace', 'flat', 'house', 'bungalo'];
+var LOCATION_MIN_Y = 130;
+var LOCATION_MAX_Y = 630;
 var cards = [];
 var mapPin = document.querySelector('.map__pin');
 var mapPinWidth = window.getComputedStyle(mapPin).width;
 var mapPinHeight = window.getComputedStyle(mapPin).height;
-var LOCATION_MIN_X = 0.5 * parseInt(mapPinWidth, 10);
-var LOCATION_MAX_X = parseInt(bodyWidth, 10) - LOCATION_MIN_X;
-var LOCATION_MIN_Y = 130;
-var LOCATION_MAX_Y = 630;
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var pinsList = document.querySelector('.map__pins');
 var advertsNumber = 8;
@@ -28,6 +26,18 @@ var getRandomNumber = function (min, max) {
   return randomNumber;
 };
 
+var getLocationMinX = function () {
+  var locationMinX = 0.5 * parseInt(mapPinWidth, 10);
+
+  return locationMinX;
+};
+
+var getLocationMaxX = function () {
+  var locationMaxX = parseInt(bodyWidth, 10) - getLocationMinX();
+
+  return locationMaxX;
+};
+
 var createCard = function (array, index) {
 
   var card = {
@@ -40,7 +50,7 @@ var createCard = function (array, index) {
     },
 
     location: {
-      x: getRandomNumber(LOCATION_MIN_X, LOCATION_MAX_X),
+      x: getRandomNumber(getLocationMinX(), getLocationMaxX()),
       y: getRandomNumber(LOCATION_MIN_Y, LOCATION_MAX_Y),
     },
   };
@@ -50,7 +60,7 @@ var createCard = function (array, index) {
 
 var addPinElement = function (advert) {
   var pin = pinTemplate.cloneNode(true);
-  pin.style.left = advert.location.x - LOCATION_MIN_X + 'px';
+  pin.style.left = advert.location.x - getLocationMinX() + 'px';
   pin.style.top = advert.location.y - parseInt(mapPinHeight, 10) + 'px';
   pin.querySelector('img').src = advert.author.avatar;
   pin.querySelector('img').alt = 'Заголовок объявления';
