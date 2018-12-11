@@ -3,7 +3,7 @@
 var body = document.querySelector('body');
 var bodyWidth = window.getComputedStyle(body).maxWidth;
 var map = document.querySelector('.map');
-var accomodationType = ['palace', 'flat', 'house', 'bungalo'];
+var accomodation = ['palace', 'flat', 'house', 'bungalo'];
 var LOCATION_MIN_Y = 130;
 var LOCATION_MAX_Y = 630;
 var cards = [];
@@ -19,7 +19,8 @@ var filters = document.querySelector('.map__filters');
 var mainPin = document.querySelector('.map__pin--main');
 var mainPinWidth = window.getComputedStyle(mainPin).width;
 var mainPinHeight = window.getComputedStyle(mainPin).height;
-var addressField = document.getElementById('address');
+var addressField = document.querySelector('#address');
+var popupButton = document.querySelector('.popup__close');
 
 var getLinkAvatar = function (index) {
   var avatar = 'img/avatars/user' + 0 + (index + 1) + '.png';
@@ -65,12 +66,26 @@ var createCard = function (array, index) {
   return card;
 };
 
+var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var openCard = function (evt) {
+  var cardElement = cardTemplate.cloneNode(true);
+  var cardAvatar = cardTemplate.querySelector('.popup__avatar');
+  cardAvatar.src = evt.target.src;
+  var newCard = pinsList.appendChild(cardElement);
+
+  return newCard;
+};
+
 var addPinElement = function (advert) {
   var pinElement = pinTemplate.cloneNode(true);
   pinElement.style.left = advert.location.x - getLocationMinX() + 'px';
   pinElement.style.top = advert.location.y - parseInt(pinHeight, 10) + 'px';
   pinElement.querySelector('img').src = advert.author.avatar;
   pinElement.querySelector('img').alt = 'Заголовок объявления';
+  pinElement.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    openCard(evt);
+  });
 
   return pinElement;
 };
@@ -101,6 +116,11 @@ var buttonClickHandler = function () {
   addressField.value = getMainPinX() + ', ' + getMainPinY();
 };
 
+var popupButtonClickHandler = function () {
+  var popup = document.querySelector('.popup');
+  pinsList.removeChild(popup);
+};
+
 filters.classList.add('map__filters--disabled');
 fieldset.disabled = true;
 addressField.value = getMainPinX() + ', ' + getMainPinCentreY();
@@ -109,11 +129,26 @@ mainPin.addEventListener('keypress', buttonClickHandler);
 
 var addAdvertPin = function (advertsCounter) {
   for (var i = 0; i < advertsCounter; i++) {
-    createCard(accomodationType, i);
-    cards.push(createCard(accomodationType, i));
+    createCard(accomodation, i);
+    cards.push(createCard(accomodation, i));
     addPinElement(cards[i]);
     var advertPin = pinsList.appendChild(addPinElement(cards[i]));
   }
 
   return advertPin;
 };
+
+popupButton.addEventListener('click', popupButtonClickHandler);
+
+var accomodationList = document.querySelector('#type');
+var price = document.querySelector('#price');
+var isSelected = document.querySelector(':checked');
+var accomodationType = accomodationList.querySelectorAll('option');
+
+for (var i = 0; i < accomodationList.length; i++) {
+  if (accomodationType[i].value === 'bungalo' && isSelected) {
+    price.placeholder = 0;
+  } else {
+    price.placeholder = 10;
+  }
+}
