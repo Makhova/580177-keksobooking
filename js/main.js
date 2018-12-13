@@ -1,17 +1,13 @@
 'use strict';
 
 var body = document.querySelector('body');
-var bodyWidth = window.getComputedStyle(body).maxWidth;
-var map = document.querySelector('.map');
-var accomodationType = ['palace', 'flat', 'house', 'bungalo'];
+var bodyWidth = body.offsetWidth;
+var accomodation = ['palace', 'flat', 'house', 'bungalo'];
 var LOCATION_MIN_Y = 130;
 var LOCATION_MAX_Y = 630;
-var cards = [];
-var mapPin = document.querySelector('.map__pin');
-var mapPinWidth = window.getComputedStyle(mapPin).width;
-var mapPinHeight = window.getComputedStyle(mapPin).height;
-var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-var pinsList = document.querySelector('.map__pins');
+var pin = document.querySelector('.map__pin');
+var pinWidth = pin.offsetWidth;
+var pinHeight = pin.offsetHeight;
 var advertsNumber = 8;
 
 var getLinkAvatar = function (index) {
@@ -26,60 +22,65 @@ var getRandomNumber = function (min, max) {
   return randomNumber;
 };
 
+var getRandomNumberFromArray = function (array) {
+  var randomIndex = getRandomNumber(0, array.length - 1);
+
+  return array[randomIndex];
+};
+
 var getLocationMinX = function () {
-  var locationMinX = 0.5 * parseInt(mapPinWidth, 10);
+  var locationMinX = 0.5 * pinWidth;
 
   return locationMinX;
 };
 
 var getLocationMaxX = function () {
-  var locationMaxX = parseInt(bodyWidth, 10) - getLocationMinX();
+  var locationMaxX = bodyWidth - getLocationMinX();
 
   return locationMaxX;
 };
 
-var createCard = function (array, index) {
+var createCards = function (cardsCount) {
+  var cards = [];
+  var card = {};
 
-  var card = {
-    author: {
-      avatar: getLinkAvatar(index),
-    },
+  for (var i = 0; i < cardsCount; i++) {
+    card = {
+      author: {
+        avatar: getLinkAvatar(i),
+      },
 
-    offer: {
-      type: array[index],
-    },
+      offer: {
+        type: getRandomNumberFromArray(accomodation),
+      },
 
-    location: {
-      x: getRandomNumber(getLocationMinX(), getLocationMaxX()),
-      y: getRandomNumber(LOCATION_MIN_Y, LOCATION_MAX_Y),
-    },
-  };
-
-  return card;
-};
-
-var addPinElement = function (advert) {
-  var pin = pinTemplate.cloneNode(true);
-  pin.style.left = advert.location.x - getLocationMinX() + 'px';
-  pin.style.top = advert.location.y - parseInt(mapPinHeight, 10) + 'px';
-  pin.querySelector('img').src = advert.author.avatar;
-  pin.querySelector('img').alt = 'Заголовок объявления';
-
-  return pin;
-};
-
-var addAdvertPin = function (advertsCounter) {
-  for (var i = 0; i < advertsCounter; i++) {
-    createCard(accomodationType, i);
-    cards.push(createCard(accomodationType, i));
-    addPinElement(cards[i]);
-    var advertPin = pinsList.appendChild(addPinElement(cards[i]));
+      location: {
+        x: getRandomNumber(getLocationMinX(), getLocationMaxX()),
+        y: getRandomNumber(LOCATION_MIN_Y, LOCATION_MAX_Y),
+      },
+    };
+    cards.push(card);
   }
 
-  return advertPin;
+  return cards;
 };
 
-map.classList.remove('map--faded');
-addAdvertPin(advertsNumber);
+var cards = createCards(advertsNumber);
 
+function renderPins(adverts) {
+  var template = document.querySelector('.map__pins');
+  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+  var fragment = document.createDocumentFragment();
+
+  adverts.forEach(function (item) {
+    var pinElement = pinTemplate.cloneNode(true);
+    pinElement.querySelector('img').src = item.author.avatar;
+    pinElement.style.left = (item.location.x - 0.5 * pinWidth) + 'px';
+    pinElement.style.top = item.location.y - pinHeight + 'px';
+    fragment.appendChild(pinElement);
+    template.appendChild(fragment);
+  });
+}
+
+renderPins(cards);
 
