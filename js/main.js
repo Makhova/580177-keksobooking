@@ -80,7 +80,7 @@ var renderPins = function (adverts) {
     fragment.appendChild(pinElement);
     template.appendChild(fragment);
   });
-}
+};
 
 var activatePage = function () {
   var map = document.querySelector('.map');
