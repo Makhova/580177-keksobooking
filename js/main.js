@@ -23,7 +23,7 @@ var getRandomNumber = function (min, max) {
 };
 
 var getRandomNumberFromArray = function (array) {
-  var randomIndex = getRandomNumber(0, array.length - 1)
+  var randomIndex = getRandomNumber(0, array.length - 1);
 
   return array[randomIndex];
 };
