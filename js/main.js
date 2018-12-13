@@ -67,7 +67,7 @@ var createCards = function (cardsCount) {
 
 var cards = createCards(advertsNumber);
 
-function renderPins(adverts) {
+var renderPins = function (adverts) {
   var template = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var fragment = document.createDocumentFragment();
@@ -82,5 +82,26 @@ function renderPins(adverts) {
   });
 }
 
-renderPins(cards);
+var activatePage = function () {
+  var map = document.querySelector('.map');
+  map.classList.remove('map--faded');
+  var advertForm = document.querySelector('.ad-form');
+  advertForm.classList.remove('ad-form--disabled');
+  var fieldset = document.querySelectorAll('fieldset');
+  var select = document.querySelectorAll('select');
+  fieldset.disabled = false;
+  select.disabled = false;
+};
+
+var mainPin = document.querySelector('.map__pin--main');
+mainPin.addEventListener('click', function (evt) {
+  evt.preventDefault();
+  activatePage();
+  renderPins(cards);
+});
+mainPin.addEventListener('keypress', function (evt) {
+  evt.preventDefault();
+  activatePage();
+  renderPins(cards);
+});
 
