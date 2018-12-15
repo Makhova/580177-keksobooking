@@ -70,15 +70,15 @@ var cards = createCards(advertsNumber);
 var renderPins = function (adverts) {
   var template = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var fragment = document.createDocumentFragment();
+  var pinFragment = document.createDocumentFragment();
 
   adverts.forEach(function (item) {
     var pinElement = pinTemplate.cloneNode(true);
     pinElement.querySelector('img').src = item.author.avatar;
     pinElement.style.left = (item.location.x - 0.5 * pinWidth) + 'px';
     pinElement.style.top = item.location.y - pinHeight + 'px';
-    fragment.appendChild(pinElement);
-    template.appendChild(fragment);
+    pinFragment.appendChild(pinElement);
+    template.appendChild(pinFragment);
   });
 };
 
@@ -105,3 +105,22 @@ mainPin.addEventListener('keypress', function (evt) {
   renderPins(cards);
 });
 
+var renderCard = function (item) {
+  var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+  var cardElement = cardTemplate.cloneNode(true);
+  cardElement.querySelector('.popup__avatar').src = item.author.avatar;
+  cardElement.querySelector('.popup__type').textContent = item.offer.type;
+
+  var cardFragment = document.createDocumentFragment();
+  cardFragment.appendChild(cardElement);
+  cardTemplate.appendChild(cardFragment);
+};
+
+renderCard(cards[0]);
+
+pin.addEventListener('click', function (evt) {
+  evt.preventDefault();
+  var target = evt.target;
+  var activePin = target;
+  console.log(activePin);
+});
