@@ -68,7 +68,7 @@ var createCards = function (cardsCount) {
 var cards = createCards(advertsNumber);
 
 var renderPins = function (adverts) {
-  var template = document.querySelector('.map__pins');
+  var pins = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinFragment = document.createDocumentFragment();
 
@@ -78,7 +78,7 @@ var renderPins = function (adverts) {
     pinElement.style.left = (item.location.x - 0.5 * pinWidth) + 'px';
     pinElement.style.top = item.location.y - pinHeight + 'px';
     pinFragment.appendChild(pinElement);
-    template.appendChild(pinFragment);
+    pins.appendChild(pinFragment);
   });
 };
 
@@ -114,13 +114,16 @@ var renderCard = function (item) {
   var cardFragment = document.createDocumentFragment();
   cardFragment.appendChild(cardElement);
   cardTemplate.appendChild(cardFragment);
+  cardFragment.appendChild(cardElement);
+  document.querySelector('.map').appendChild(cardFragment);
 };
 
 renderCard(cards[0]);
 
 pin.addEventListener('click', function (evt) {
   evt.preventDefault();
-  var target = evt.target;
+  var target = evt.currentTarget;
   var activePin = target;
   console.log(activePin);
 });
+
