@@ -66,24 +66,26 @@ var createCards = function (cardsCount) {
 };
 
 var cards = createCards(advertsNumber);
+var pins = document.querySelector('.map__pins');
 
 var renderPins = function (adverts) {
-  var pins = document.querySelector('.map__pins');
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var pinFragment = document.createDocumentFragment();
 
-  adverts.forEach(function (item) {
+  adverts.forEach(function (item, index) {
     var pinElement = pinTemplate.cloneNode(true);
     pinElement.querySelector('img').src = item.author.avatar;
     pinElement.style.left = (item.location.x - 0.5 * pinWidth) + 'px';
     pinElement.style.top = item.location.y - pinHeight + 'px';
+    pinElement.dataset.id = index;
     pinFragment.appendChild(pinElement);
     pins.appendChild(pinFragment);
   });
 };
 
+var map = document.querySelector('.map');
+
 var activatePage = function () {
-  var map = document.querySelector('.map');
   map.classList.remove('map--faded');
   var advertForm = document.querySelector('.ad-form');
   advertForm.classList.remove('ad-form--disabled');
@@ -110,20 +112,30 @@ var renderCard = function (item) {
   var cardElement = cardTemplate.cloneNode(true);
   cardElement.querySelector('.popup__avatar').src = item.author.avatar;
   cardElement.querySelector('.popup__type').textContent = item.offer.type;
-
   var cardFragment = document.createDocumentFragment();
   cardFragment.appendChild(cardElement);
-  cardTemplate.appendChild(cardFragment);
-  cardFragment.appendChild(cardElement);
-  document.querySelector('.map').appendChild(cardFragment);
+  var popup = map.querySelector('.popup');
+  if (popup) {
+    map.replaceChild(cardFragment, popup);
+  } else {
+    map.appendChild(cardFragment);
+  }
 };
 
-renderCard(cards[0]);
+var popupButtonClickHandler = function () {
+  var popup = map.querySelector('.popup');
+  var popupCloseButton = document.querySelector('.popup__close');
+  popupCloseButton.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    map.removeChild(popup);
+  });
+};
 
-pin.addEventListener('click', function (evt) {
+pins.addEventListener('click', function (evt) {
   evt.preventDefault();
-  var target = evt.currentTarget;
-  var activePin = target;
-  console.log(activePin);
+  var target = evt.target;
+  var activePin = target.parentElement.dataset.id;
+  renderCard(cards[activePin]);
+  popupButtonClickHandler();
 });
 
