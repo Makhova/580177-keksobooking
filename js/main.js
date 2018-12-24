@@ -131,11 +131,24 @@ var popupButtonClickHandler = function () {
   });
 };
 
+var documentEscPress = function () {
+  var popup = map.querySelector('.popup');
+  document.addEventListener('keypress', function (evt) {
+    evt.preventDefault();
+    if (evt.keycode === 27) {
+      map.removeChild(popup);
+    }
+  });
+};
+
 pins.addEventListener('click', function (evt) {
   evt.preventDefault();
   var target = evt.target;
   var activePin = target.parentElement.dataset.id;
-  renderCard(cards[activePin]);
-  popupButtonClickHandler();
+  if (activePin) {
+    renderCard(cards[activePin]);
+    popupButtonClickHandler();
+    documentEscPress();
+  }
 });
 
