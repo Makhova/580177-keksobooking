@@ -9,6 +9,7 @@ var pin = document.querySelector('.map__pin');
 var pinWidth = pin.offsetWidth;
 var pinHeight = pin.offsetHeight;
 var advertsNumber = 8;
+var ESC_KEYCODE = 27;
 
 var getLinkAvatar = function (index) {
   var avatar = 'img/avatars/user' + 0 + (index + 1) + '.png';
@@ -131,15 +132,18 @@ var popupButtonClickHandler = function () {
   });
 };
 
-var documentEscPress = function () {
-  var popup = map.querySelector('.popup');
-  document.addEventListener('keypress', function (evt) {
-    evt.preventDefault();
-    if (evt.keycode === 27) {
-      map.removeChild(popup);
-    }
-  });
+var closeCard = function () {
+  var popup = document.querySelector('.popup');
+  if (!(popup === null)) {
+    map.removeChild(popup);
+  }
 };
+
+document.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closeCard();
+  }
+});
 
 pins.addEventListener('click', function (evt) {
   evt.preventDefault();
@@ -148,7 +152,6 @@ pins.addEventListener('click', function (evt) {
   if (activePin) {
     renderCard(cards[activePin]);
     popupButtonClickHandler();
-    documentEscPress();
   }
 });
 
