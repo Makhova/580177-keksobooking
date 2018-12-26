@@ -114,13 +114,14 @@ var activatePage = function () {
   advertForm.classList.remove('ad-form--disabled');
   var fieldset = document.querySelectorAll('fieldset');
   var select = document.querySelectorAll('select');
-  for (var i = 0; i < fieldset.length; i++) {
-    fieldset[i].disabled = false;
-  }
-  for (var j = 0; j < select.length; j++) {
-    select[j].disabled = false;
-  }
   addressField.value = getMainPinX() + ', ' + getMainPinY();
+  fieldset.forEach(function (item) {
+    item.disabled = false;
+  });
+
+  select.forEach(function (item) {
+    item.disabled = false;
+  });
 };
 
 mainPin.addEventListener('click', function (evt) {
