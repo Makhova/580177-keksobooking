@@ -1,16 +1,17 @@
 'use strict';
 
+var LOCATION_MIN_Y = 130;
+var LOCATION_MAX_Y = 630;
+var ESC_KEYCODE = 27;
 var body = document.querySelector('body');
 var bodyWidth = body.offsetWidth;
 var accomodation = ['palace', 'flat', 'house', 'bungalo'];
 var map = document.querySelector('.map');
-var LOCATION_MIN_Y = 130;
-var LOCATION_MAX_Y = 630;
 var pin = document.querySelector('.map__pin');
 var pinWidth = pin.offsetWidth;
 var pinHeight = pin.offsetHeight;
+var pins = document.querySelector('.map__pins');
 var advertsNumber = 8;
-var ESC_KEYCODE = 27;
 var mainPin = document.querySelector('.map__pin--main');
 var mainPinWidth = mainPin.offsetWidth;
 var mainPinHeight = mainPin.offsetHeight;
@@ -72,7 +73,6 @@ var createCards = function (cardsCount) {
 };
 
 var cards = createCards(advertsNumber);
-var pins = document.querySelector('.map__pins');
 
 var renderPins = function (adverts) {
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -94,6 +94,7 @@ var getMainPinX = function () {
 
   return mainPinX;
 };
+
 var getMainPinCentreY = function () {
   var mainPinCentreY = Math.round(parseInt(mainPin.style.top, 10) + 0.5 * parseInt(mainPinHeight, 10));
 
@@ -115,6 +116,7 @@ var activatePage = function () {
   var fieldset = document.querySelectorAll('fieldset');
   var select = document.querySelectorAll('select');
   addressField.value = getMainPinX() + ', ' + getMainPinY();
+
   fieldset.forEach(function (item) {
     item.disabled = false;
   });
@@ -125,11 +127,6 @@ var activatePage = function () {
 };
 
 mainPin.addEventListener('click', function (evt) {
-  evt.preventDefault();
-  activatePage();
-  renderPins(cards);
-});
-mainPin.addEventListener('keypress', function (evt) {
   evt.preventDefault();
   activatePage();
   renderPins(cards);
@@ -153,6 +150,7 @@ var renderCard = function (item) {
 var popupButtonClickHandler = function () {
   var popup = map.querySelector('.popup');
   var popupCloseButton = document.querySelector('.popup__close');
+
   popupCloseButton.addEventListener('click', function (evt) {
     evt.preventDefault();
     map.removeChild(popup);
@@ -176,6 +174,7 @@ pins.addEventListener('click', function (evt) {
   evt.preventDefault();
   var target = evt.target;
   var activePin = target.parentElement.dataset.id;
+
   if (activePin) {
     renderCard(cards[activePin]);
     popupButtonClickHandler();
