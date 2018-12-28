@@ -183,34 +183,30 @@ pins.addEventListener('click', function (evt) {
 });
 
 var accomodationList = document.querySelector('#type');
-var price = document.querySelector('#price');
-var typeSelectClickHandler = function (evt) {
-  if (evt.target.value === 'bungalo') {
-    price.placeholder = 0;
-    price.min = 0;
-  } else if (evt.target.value === 'flat') {
-    price.placeholder = 1000;
-    price.min = 1000;
-  } else if (evt.target.value === 'house') {
-    price.placeholder = 5000;
-    price.min = 5000;
-  } else if (evt.target.value === 'palace') {
-    price.placeholder = 10000;
-    price.min = 10000;
-  }
+var priceField = document.querySelector('#price');
+var minPrice = {
+  bungalo: 0,
+  flat: 1000,
+  house: 5000,
+  palace: 10000
+};
+var setMinPrice = function (price) {
+  priceField.min = price;
+  priceField.placeholder = price;
 };
 
-accomodationList.addEventListener('click', typeSelectClickHandler);
-
-var timeField = document.querySelector('.ad-form__element--time');
-var timeList = timeField.querySelectorAll('select');
-var time = timeField.querySelectorAll('option');
-timeField.addEventListener('click', function (evt) {
-  for (var i = 0; i < timeList.length; i++) {
-    for (var j = 0; j < time.length; j++) {
-      if (time[j].value === evt.target.value) {
-        time[j].selected = true;
-      }
-    }
-  }
+accomodationList.addEventListener('change', function (evt) {
+  setMinPrice(minPrice[evt.target.value]);
 });
+
+var timeIn = document.querySelector('#timein');
+var timeOut = document.querySelector('#timeout');
+
+timeIn.addEventListener('change', function (evt) {
+  timeOut.value = evt.target.value;
+});
+
+timeOut.addEventListener('change', function (evt) {
+  timeIn.value = evt.target.value;
+});
+
