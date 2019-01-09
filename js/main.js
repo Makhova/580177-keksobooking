@@ -129,7 +129,7 @@ var activatePage = function () {
   });
 };
 
-mainPin.addEventListener('mousedown', function (evt) {
+var mouseDownHandler = function (evt) {
   evt.preventDefault();
 
   var startCoords = {
@@ -145,8 +145,9 @@ mainPin.addEventListener('mousedown', function (evt) {
 
     var pinMinTop = LOCATION_MIN_Y - mainPinHeight;
     var pinMaxTop = LOCATION_MAX_Y - mainPinHeight;
+    var pinMaxLeft = getLocationMaxX() - getLocationMinX();
 
-    if ((mainPin.offsetTop - shift.y) >= pinMinTop && (mainPin.offsetTop - shift.y) <= pinMaxTop) {
+    if ((mainPin.offsetTop - shift.y) >= pinMinTop && (mainPin.offsetTop - shift.y) <= pinMaxTop && (mainPin.offsetLeft - shift.x) >= 0 && (mainPin.offsetLeft - shift.x) <= pinMaxLeft) {
       startCoords = {
         x: moveEvt.clientX,
         y: moveEvt.clientY
@@ -169,7 +170,9 @@ mainPin.addEventListener('mousedown', function (evt) {
     // getMainPinCoords(mouseUpEvt);
     // getAddressCoords();
   });
-});
+};
+
+mainPin.addEventListener('mousedown', mouseDownHandler);
 
 var renderCard = function (item) {
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
