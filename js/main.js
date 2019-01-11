@@ -1,15 +1,18 @@
 'use strict';
 
-var LOCATION_MIN_Y = 130;
-var LOCATION_MAX_Y = 630;
-var ESC_KEYCODE = 27;
 var body = document.querySelector('body');
 var bodyWidth = body.offsetWidth;
-var accomodation = ['palace', 'flat', 'house', 'bungalo'];
-var map = document.querySelector('.map');
 var pin = document.querySelector('.map__pin');
 var pinWidth = pin.offsetWidth;
 var pinHeight = pin.offsetHeight;
+var PIN_HALF_WIDTH = pinWidth / 2;
+var LOCATION_MIN_X = PIN_HALF_WIDTH;
+var LOCATION_MAX_X = bodyWidth - PIN_HALF_WIDTH;
+var LOCATION_MIN_Y = 130;
+var LOCATION_MAX_Y = 630;
+var ESC_KEYCODE = 27;
+var accomodation = ['palace', 'flat', 'house', 'bungalo'];
+var map = document.querySelector('.map');
 var pins = document.querySelector('.map__pins');
 var advertsNumber = 8;
 var mainPin = document.querySelector('.map__pin--main');
@@ -35,18 +38,6 @@ var getRandomNumberFromArray = function (array) {
   return array[randomIndex];
 };
 
-var getLocationMinX = function () {
-  var locationMinX = 0.5 * pinWidth;
-
-  return locationMinX;
-};
-
-var getLocationMaxX = function () {
-  var locationMaxX = bodyWidth - getLocationMinX();
-
-  return locationMaxX;
-};
-
 var createCards = function (cardsCount) {
   var cards = [];
   var card = {};
@@ -62,7 +53,7 @@ var createCards = function (cardsCount) {
       },
 
       location: {
-        x: getRandomNumber(getLocationMinX(), getLocationMaxX()),
+        x: getRandomNumber(LOCATION_MIN_X, LOCATION_MAX_X),
         y: getRandomNumber(LOCATION_MIN_Y, LOCATION_MAX_Y),
       },
     };
@@ -138,38 +129,65 @@ var mouseDownHandler = function (evt) {
   };
 
   var mouseMoveHandler = function (moveEvt) {
+    moveEvt.preventDefault();
+
     var shift = {
       x: startCoords.x - moveEvt.clientX,
       y: startCoords.y - moveEvt.clientY
     };
 
-    var pinMinTop = LOCATION_MIN_Y - mainPinHeight;
-    var pinMaxTop = LOCATION_MAX_Y - mainPinHeight;
-    var pinMaxLeft = getLocationMaxX() - getLocationMinX();
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
 
-    if ((mainPin.offsetTop - shift.y) >= pinMinTop && (mainPin.offsetTop - shift.y) <= pinMaxTop && (mainPin.offsetLeft - shift.x) >= 0 && (mainPin.offsetLeft - shift.x) <= pinMaxLeft) {
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
+    var newCoords = {
+      x: mainPin.offsetLeft - shift.x,
+      y: mainPin.offsetTop - shift.y
+    };
 
-      mainPin.style.top = (mainPin.offsetTop - shift.y) + 'px';
-      mainPin.style.left = (mainPin.offsetLeft - shift.x) + 'px';
-      activatePage();
-      getAddressCoords();
-      renderPins(cards);
-    } else {
-      removeEventListener('mousemove', mouseMoveHandler);
+    var minCoords = {
+      x: Math.floor(LOCATION_MIN_X - PIN_HALF_WIDTH),
+      y: Math.floor(LOCATION_MIN_Y - pinHeight)
+    };
+
+    var maxCoords = {
+      x: Math.floor(map.offsetWidth - pinWidth),
+      y: Math.floor(LOCATION_MAX_Y - pinHeight)
+    };
+
+    if (newCoords.x < minCoords.x) {
+      newCoords.x = minCoords.x;
     }
+
+    if (newCoords.y < minCoords.y) {
+      newCoords.y = minCoords.y;
+    }
+
+    if (newCoords.x > maxCoords.x) {
+      newCoords.x = maxCoords.x;
+    }
+
+    if (newCoords.y > maxCoords.y) {
+      newCoords.y = maxCoords.y;
+    }
+
+    mainPin.style.left = newCoords.x + 'px';
+    mainPin.style.top = newCoords.y + 'px';
+
+    activatePage();
+    getAddressCoords();
+    renderPins(cards);
   };
 
-  mainPin.addEventListener('mousemove', mouseMoveHandler);
+  var mouseUpHandler = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', mouseMoveHandler);
+    document.removeEventListener('mouseup', mouseUpHandler);
+  };
 
-  mainPin.addEventListener('mouseup', function () {
-    removeEventListener('mousemove', mouseMoveHandler);
-    // getMainPinCoords(mouseUpEvt);
-    // getAddressCoords();
-  });
+  document.addEventListener('mousemove', mouseMoveHandler);
+  document.addEventListener('mouseup', mouseUpHandler);
 };
 
 mainPin.addEventListener('mousedown', mouseDownHandler);
