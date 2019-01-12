@@ -1,15 +1,18 @@
 'use strict';
 
-var LOCATION_MIN_Y = 130;
-var LOCATION_MAX_Y = 630;
-var ESC_KEYCODE = 27;
 var body = document.querySelector('body');
 var bodyWidth = body.offsetWidth;
-var accomodation = ['palace', 'flat', 'house', 'bungalo'];
-var map = document.querySelector('.map');
 var pin = document.querySelector('.map__pin');
 var pinWidth = pin.offsetWidth;
 var pinHeight = pin.offsetHeight;
+var PIN_HALF_WIDTH = pinWidth / 2;
+var LOCATION_MIN_X = PIN_HALF_WIDTH;
+var LOCATION_MAX_X = bodyWidth - PIN_HALF_WIDTH;
+var LOCATION_MIN_Y = 130;
+var LOCATION_MAX_Y = 630;
+var ESC_KEYCODE = 27;
+var accomodation = ['palace', 'flat', 'house', 'bungalo'];
+var map = document.querySelector('.map');
 var pins = document.querySelector('.map__pins');
 var advertsNumber = 8;
 var mainPin = document.querySelector('.map__pin--main');
@@ -35,18 +38,6 @@ var getRandomNumberFromArray = function (array) {
   return array[randomIndex];
 };
 
-var getLocationMinX = function () {
-  var locationMinX = 0.5 * pinWidth;
-
-  return locationMinX;
-};
-
-var getLocationMaxX = function () {
-  var locationMaxX = bodyWidth - getLocationMinX();
-
-  return locationMaxX;
-};
-
 var createCards = function (cardsCount) {
   var cards = [];
   var card = {};
@@ -62,7 +53,7 @@ var createCards = function (cardsCount) {
       },
 
       location: {
-        x: getRandomNumber(getLocationMinX(), getLocationMaxX()),
+        x: getRandomNumber(LOCATION_MIN_X, LOCATION_MAX_X),
         y: getRandomNumber(LOCATION_MIN_Y, LOCATION_MAX_Y),
       },
     };
@@ -109,13 +100,16 @@ var getMainPinY = function () {
 
 addressField.value = getMainPinX() + ', ' + getMainPinCentreY();
 
+var getAddressCoords = function () {
+  addressField.value = getMainPinX() + ', ' + getMainPinY();
+};
+
 var activatePage = function () {
   map.classList.remove('map--faded');
   var advertForm = document.querySelector('.ad-form');
   advertForm.classList.remove('ad-form--disabled');
   var fieldset = document.querySelectorAll('fieldset');
   var select = document.querySelectorAll('select');
-  addressField.value = getMainPinX() + ', ' + getMainPinY();
 
   fieldset.forEach(function (item) {
     item.disabled = false;
@@ -126,11 +120,77 @@ var activatePage = function () {
   });
 };
 
-mainPin.addEventListener('click', function (evt) {
+var mouseDownHandler = function (evt) {
   evt.preventDefault();
-  activatePage();
-  renderPins(cards);
-});
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var mouseMoveHandler = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var newCoords = {
+      x: mainPin.offsetLeft - shift.x,
+      y: mainPin.offsetTop - shift.y
+    };
+
+    var minCoords = {
+      x: Math.floor(LOCATION_MIN_X - PIN_HALF_WIDTH),
+      y: Math.floor(LOCATION_MIN_Y - pinHeight)
+    };
+
+    var maxCoords = {
+      x: Math.floor(map.offsetWidth - pinWidth),
+      y: Math.floor(LOCATION_MAX_Y - pinHeight)
+    };
+
+    if (newCoords.x < minCoords.x) {
+      newCoords.x = minCoords.x;
+    }
+
+    if (newCoords.y < minCoords.y) {
+      newCoords.y = minCoords.y;
+    }
+
+    if (newCoords.x > maxCoords.x) {
+      newCoords.x = maxCoords.x;
+    }
+
+    if (newCoords.y > maxCoords.y) {
+      newCoords.y = maxCoords.y;
+    }
+
+    mainPin.style.left = newCoords.x + 'px';
+    mainPin.style.top = newCoords.y + 'px';
+
+    activatePage();
+    getAddressCoords();
+    renderPins(cards);
+  };
+
+  var mouseUpHandler = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', mouseMoveHandler);
+    document.removeEventListener('mouseup', mouseUpHandler);
+  };
+
+  document.addEventListener('mousemove', mouseMoveHandler);
+  document.addEventListener('mouseup', mouseUpHandler);
+};
+
+mainPin.addEventListener('mousedown', mouseDownHandler);
 
 var renderCard = function (item) {
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
