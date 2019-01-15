@@ -1,9 +1,19 @@
 'use strict';
 
-
 (function () {
+  var map = document.querySelector('.map');
+  var mainPin = document.querySelector('.map__pin--main');
+  var pin = document.querySelector('.map__pin');
+  var pinWidth = pin.offsetWidth;
+  var pinHeight = pin.offsetHeight;
+  var PIN_HALF_WIDTH = pinWidth / 2;
+  var LOCATION_MIN_X = PIN_HALF_WIDTH;
+  var LOCATION_MIN_Y = 130;
+  var LOCATION_MAX_Y = 630;
+  var cards = window.createCards();
+
   var activatePage = function () {
-    window.global.map.classList.remove('map--faded');
+    map.classList.remove('map--faded');
     var advertForm = document.querySelector('.ad-form');
     advertForm.classList.remove('ad-form--disabled');
     var fieldset = document.querySelectorAll('fieldset');
@@ -40,18 +50,18 @@
       };
 
       var newCoords = {
-        x: window.global.mainPin.offsetLeft - shift.x,
-        y: window.global.mainPin.offsetTop - shift.y
+        x: mainPin.offsetLeft - shift.x,
+        y: mainPin.offsetTop - shift.y
       };
 
       var minCoords = {
-        x: Math.floor(window.global.LOCATION_MIN_X - window.global.PIN_HALF_WIDTH),
-        y: Math.floor(window.global.LOCATION_MIN_Y - window.global.pinHeight)
+        x: Math.floor(LOCATION_MIN_X - PIN_HALF_WIDTH),
+        y: Math.floor(LOCATION_MIN_Y - pinHeight)
       };
 
       var maxCoords = {
-        x: Math.floor(window.global.map.offsetWidth - window.global.pinWidth),
-        y: Math.floor(window.global.LOCATION_MAX_Y - window.global.pinHeight)
+        x: Math.floor(map.offsetWidth - pinWidth),
+        y: Math.floor(LOCATION_MAX_Y - pinHeight)
       };
 
       if (newCoords.x < minCoords.x) {
@@ -70,12 +80,12 @@
         newCoords.y = maxCoords.y;
       }
 
-      window.global.mainPin.style.left = newCoords.x + 'px';
-      window.global.mainPin.style.top = newCoords.y + 'px';
+      mainPin.style.left = newCoords.x + 'px';
+      mainPin.style.top = newCoords.y + 'px';
 
       activatePage();
-      // getAddressCoords();
-      // renderPins(cards);
+      window.getAddressCoords();
+      window.renderPins(cards);
     };
 
     var mouseUpHandler = function (upEvt) {
@@ -88,5 +98,5 @@
     document.addEventListener('mouseup', mouseUpHandler);
   };
 
-  window.global.mainPin.addEventListener('mousedown', mouseDownHandler);
-}) ();
+  mainPin.addEventListener('mousedown', mouseDownHandler);
+})();

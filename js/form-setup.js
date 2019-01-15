@@ -1,29 +1,34 @@
 'use strict';
 
 (function () {
+  var mainPin = document.querySelector('.map__pin--main');
+  var mainPinWidth = mainPin.offsetWidth;
+  var mainPinHeight = mainPin.offsetHeight;
   var addressField = document.querySelector('#address');
   var getMainPinX = function () {
-    var mainPinX = Math.round(parseInt(window.global.mainPin.style.left, 10) + 0.5 * parseInt(window.global.mainPinWidth, 10));
+    var mainPinX = Math.round(parseInt(mainPin.style.left, 10) + 0.5 * parseInt(mainPinWidth, 10));
 
     return mainPinX;
   };
 
   var getMainPinCentreY = function () {
-    var mainPinCentreY = Math.round(parseInt(window.global.mainPin.style.top, 10) + 0.5 * parseInt(window.global.mainPinHeight, 10));
+    var mainPinCentreY = Math.round(parseInt(mainPin.style.top, 10) + 0.5 * parseInt(mainPinHeight, 10));
 
     return mainPinCentreY;
   };
 
-  /* var getMainPinY = function () {
-    var mainPinY = Math.round(parseInt(window.global.mainPin.style.top, 10) + parseInt(window.global.mainPinHeight, 10));
+  var getMainPinY = function () {
+    var mainPinY = Math.round(parseInt(mainPin.style.top, 10) + parseInt(mainPinHeight, 10));
 
     return mainPinY;
-  }; */
+  };
 
   addressField.value = getMainPinX() + ', ' + getMainPinCentreY();
-  /* var getAddressCoords = function () {
+
+  window.getAddressCoords = function () {
     addressField.value = getMainPinX() + ', ' + getMainPinY();
-  }; */
+  };
+
   var accomodationList = document.querySelector('#type');
   var priceField = document.querySelector('#price');
   var minPrice = {
@@ -51,4 +56,4 @@
   timeOut.addEventListener('change', function (evt) {
     timeIn.value = evt.target.value;
   });
-}) ();
+})();
