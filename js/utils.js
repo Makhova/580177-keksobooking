@@ -9,6 +9,7 @@
     LOCATION_MIN_Y: LOCATION_MIN_Y,
     LOCATION_MAX_Y: LOCATION_MAX_Y,
     ESC_KEYCODE: ESC_KEYCODE,
+
     getLinkAvatar: function (index) {
       var avatar = 'img/avatars/user' + 0 + (index + 1) + '.png';
       return avatar;
@@ -22,5 +23,4 @@
       return array[randomIndex];
     }
   };
-
 })();

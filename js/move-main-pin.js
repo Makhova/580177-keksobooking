@@ -1,15 +1,15 @@
 'use strict';
 
 (function () {
+  var LOCATION_MIN_Y = 130;
+  var LOCATION_MAX_Y = 630;
   var map = document.querySelector('.map');
   var mainPin = document.querySelector('.map__pin--main');
   var pin = document.querySelector('.map__pin');
   var pinWidth = pin.offsetWidth;
   var pinHeight = pin.offsetHeight;
-  var PIN_HALF_WIDTH = pinWidth / 2;
-  var LOCATION_MIN_X = PIN_HALF_WIDTH;
-  var LOCATION_MIN_Y = 130;
-  var LOCATION_MAX_Y = 630;
+  var pinHalfWidth = pinWidth / 2;
+  var locationMinX = pinHalfWidth;
   var cards = window.createCards();
 
   var activatePage = function () {
@@ -55,7 +55,7 @@
       };
 
       var minCoords = {
-        x: Math.floor(LOCATION_MIN_X - PIN_HALF_WIDTH),
+        x: Math.floor(locationMinX - pinHalfWidth),
         y: Math.floor(LOCATION_MIN_Y - pinHeight)
       };
 

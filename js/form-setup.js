@@ -5,6 +5,7 @@
   var mainPinWidth = mainPin.offsetWidth;
   var mainPinHeight = mainPin.offsetHeight;
   var addressField = document.querySelector('#address');
+
   var getMainPinX = function () {
     var mainPinX = Math.round(parseInt(mainPin.style.left, 10) + 0.5 * parseInt(mainPinWidth, 10));
 
@@ -37,6 +38,7 @@
     house: 5000,
     palace: 10000
   };
+
   var setMinPrice = function (price) {
     priceField.min = price;
     priceField.placeholder = price;
