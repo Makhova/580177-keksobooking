@@ -84,7 +84,7 @@
       mainPin.style.top = newCoords.y + 'px';
       activatePage();
       window.getAddressCoords();
-      window.load(window.renderPins);
+      window.load(window.renderPins, window.utils.errorHandler);
     };
 
     var mouseUpHandler = function (upEvt) {

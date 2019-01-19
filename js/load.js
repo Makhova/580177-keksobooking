@@ -1,12 +1,16 @@
 'use strict';
 
 (function () {
-  window.load = function (callback) {
+  window.load = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      callback(xhr.response);
+      if (xhr.status === 200) {
+        onSuccess(xhr.response);
+      } else {
+        onError();
+      }
     });
     xhr.open('GET', 'https://js.dump.academy/keksobooking/data');
     xhr.send();

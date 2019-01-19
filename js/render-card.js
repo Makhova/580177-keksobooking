@@ -23,30 +23,29 @@
     } else {
       map.appendChild(cardFragment);
     }
-  };
+    var popupButtonClickHandler = function () {
+      popup = map.querySelector('.popup');
+      var popupCloseButton = document.querySelector('.popup__close');
 
-  var popupButtonClickHandler = function () {
-    var popup = map.querySelector('.popup');
-    var popupCloseButton = document.querySelector('.popup__close');
+      popupCloseButton.addEventListener('click', function (evt) {
+        evt.preventDefault();
+        map.removeChild(popup);
+      });
+    };
 
-    popupCloseButton.addEventListener('click', function (evt) {
-      evt.preventDefault();
-      map.removeChild(popup);
+    var closeCard = function () {
+      if (!(popup === null)) {
+        map.removeChild(popup);
+      }
+    };
+
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.utils.ESC_KEYCODE) {
+        closeCard();
+      }
     });
+    popupButtonClickHandler();
   };
-
-  var closeCard = function () {
-    var popup = document.querySelector('.popup');
-    if (!(popup === null)) {
-      map.removeChild(popup);
-    }
-  };
-
-  document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === window.utils.ESC_KEYCODE) {
-      closeCard();
-    }
-  });
 
   pins.addEventListener('click', function (evt) {
     evt.preventDefault();
@@ -54,8 +53,9 @@
     activePin = target.parentElement.dataset.id;
 
     if (activePin) {
-      window.load(renderCard);
-      popupButtonClickHandler();
+      window.load(renderCard, window.utils.errorHandler);
     }
   });
+
+
 })();
