@@ -10,7 +10,6 @@
   var pinHeight = pin.offsetHeight;
   var pinHalfWidth = pinWidth / 2;
   var locationMinX = pinHalfWidth;
-  // var cards = window.renderPins;
 
   var activatePage = function () {
     map.classList.remove('map--faded');
@@ -84,7 +83,7 @@
       mainPin.style.top = newCoords.y + 'px';
       activatePage();
       window.getAddressCoords();
-      window.load(window.renderPins, window.utils.errorHandler);
+      window.backend.load(window.renderPins, window.backend.errorHandler);
     };
 
     var mouseUpHandler = function (upEvt) {

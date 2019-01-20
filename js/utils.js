@@ -21,26 +21,6 @@
     getRandomNumberFromArray: function (array) {
       var randomIndex = window.utils.getRandomNumber(0, array.length - 1);
       return array[randomIndex];
-    },
-    errorHandler: function () {
-      var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-      var errorElement = errorTemplate.cloneNode(true);
-      var errorFragment = document.createDocumentFragment();
-      errorFragment.appendChild(errorElement);
-      var map = document.querySelector('.map');
-      var error = map.querySelector('.error');
-      if (error) {
-        map.replaceChild(errorFragment, error);
-      } else {
-        map.appendChild(errorFragment);
-      }
-
-      var errorButton = document.querySelector('.error__button');
-
-      errorButton.addEventListener('click', function (evt) {
-        evt.preventDefault();
-        map.removeChild(error);
-      });
     }
   };
 })();

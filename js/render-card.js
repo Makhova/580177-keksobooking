@@ -18,24 +18,26 @@
     var cardFragment = document.createDocumentFragment();
     cardFragment.appendChild(cardElement);
     var popup = map.querySelector('.popup');
+
     if (popup) {
       map.replaceChild(cardFragment, popup);
     } else {
       map.appendChild(cardFragment);
     }
+
     var popupButtonClickHandler = function () {
-      popup = map.querySelector('.popup');
       var popupCloseButton = document.querySelector('.popup__close');
 
       popupCloseButton.addEventListener('click', function (evt) {
         evt.preventDefault();
-        map.removeChild(popup);
+        map.removeChild(map.querySelector('.popup'));
       });
     };
 
     var closeCard = function () {
+      popup = map.querySelector('.popup');
       if (!(popup === null)) {
-        map.removeChild(popup);
+        map.removeChild(map.querySelector('.popup'));
       }
     };
 
@@ -53,9 +55,8 @@
     activePin = target.parentElement.dataset.id;
 
     if (activePin) {
-      window.load(renderCard, window.utils.errorHandler);
+      pin.classList.add('map__pin--active');
+      window.backend.load(renderCard, window.backend.errorHandler);
     }
   });
-
-
 })();
