@@ -9,7 +9,7 @@
     var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
     var pinFragment = document.createDocumentFragment();
 
-    adverts.forEach(function (item, index) {
+    adverts.slice(0, 5).forEach(function (item, index) {
       var pinElement = pinTemplate.cloneNode(true);
       pinElement.querySelector('img').src = item.author.avatar;
       pinElement.style.left = (item.location.x - 0.5 * pinWidth) + 'px';
