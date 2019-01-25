@@ -96,5 +96,14 @@
     document.addEventListener('mouseup', mouseUpHandler);
   };
 
+
+  var keyDownHandler = function (evt) {
+    evt.preventDefault();
+    activatePage();
+    window.getAddressCoords();
+    window.backend.load(window.renderPins, window.backend.errorHandler);
+  };
+
   mainPin.addEventListener('mousedown', mouseDownHandler);
+  mainPin.addEventListener('keydown', keyDownHandler);
 })();

@@ -58,6 +58,15 @@
     });
 
     window.renderPins(filteredAdverts);
+    var pinsBlock = document.querySelector('.map__pins');
+    pinsBlock.addEventListener('click', function (evt) {
+      pinsBlock.removeEventListener('click', window.pinClickHandler);
+      var target = evt.target;
+      var activePin = target.parentElement.dataset.id;
+      if (activePin) {
+        window.renderCard(filteredAdverts);
+      }
+    });
   };
 
   var removePins = function () {

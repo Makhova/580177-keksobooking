@@ -6,7 +6,7 @@
   var pin = document.querySelector('.map__pin');
   var activePin = pin.dataset.id;
 
-  var renderCard = function (cards) {
+  window.renderCard = function (cards) {
     var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
     var cardElement = cardTemplate.cloneNode(true);
     cardElement.querySelector('.popup__avatar').src = cards[activePin].author.avatar;
@@ -46,17 +46,20 @@
         closeCard();
       }
     });
+
     popupButtonClickHandler();
   };
 
-  pins.addEventListener('click', function (evt) {
+  window.pinClickHandler = function (evt) {
     evt.preventDefault();
     var target = evt.target;
     activePin = target.parentElement.dataset.id;
 
     if (activePin) {
-      pin.classList.add('map__pin--active');
-      window.backend.load(renderCard, window.backend.errorHandler);
+      document.querySelector('.map__pin').classList.add('map__pin--active');
+      window.backend.load(window.renderCard, window.backend.errorHandler);
     }
-  });
+  };
+
+  pins.addEventListener('click', window.pinClickHandler);
 })();
